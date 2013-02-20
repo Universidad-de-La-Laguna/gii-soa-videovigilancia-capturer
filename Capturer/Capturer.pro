@@ -13,8 +13,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        imageviewerwindow.cpp
+        imageviewerwindow.cpp \
+    motiondetector.cpp
 
-HEADERS  += imageviewerwindow.h
+HEADERS  += imageviewerwindow.h \
+    motiondetector.h
 
 FORMS    += imageviewerwindow.ui

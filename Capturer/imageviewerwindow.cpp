@@ -3,6 +3,7 @@
 #include <QMovie>
 #include <QMutex>
 #include <QPixmap>
+#include <QRect>
 #include <QWaitCondition>
 
 #include "imageviewerwindow.h"
@@ -18,6 +19,15 @@ ImageViewerWindow::ImageViewerWindow(QWidget *parent) :
 //    ui->label->setMovie(movie_);
     connect(movie_, SIGNAL(updated(const QRect&)),
             this, SLOT(on_movie_updated(const QRect&)));
+
+    qRegisterMetaType< QVector<QRect> >("QVector<QRect>");
+    connect(this, SIGNAL(motionDetectionRequested(QImage)),
+            &motionDetector_, SLOT(doTask(QImage)));
+    connect(&motionDetector_, SIGNAL(done(QImage, QVector<QRect>)),
+            this, SLOT(on_motionDetector_done(QImage, QVector<QRect>)));
+
+    motionDetector_.moveToThread(&workingThread_);
+    workingThread_.start();
 }
 
 ImageViewerWindow::~ImageViewerWindow()
@@ -60,5 +70,11 @@ void ImageViewerWindow::on_actionAbrir_triggered()
 
 void ImageViewerWindow::on_movie_updated(const QRect&)
 {
-    ui->image->setPixmap(movie_->currentPixmap());
+    emit motionDetectionRequested(movie_->currentImage());
+}
+
+void ImageViewerWindow::on_motionDetector_done(const QImage& image,
+                                               const QVector<QRect>& boundingBoxes)
+{
+    ui->image->setPixmap(QPixmap::fromImage(image));
 }
