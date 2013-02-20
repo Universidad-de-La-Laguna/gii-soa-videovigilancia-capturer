@@ -28,6 +28,14 @@ Sorter::Sorter() : QObject()
     workingThread_.start();
 }
 
+Sorter::~Sorter()
+{
+    // Le decimos al bucle de mensajes del hilo que se detenga
+    workingThread_.quit();
+    // Ahora esperamos a que el hilo de trabajo termine
+    workingThread_.wait();
+}
+
 void Sorter::sortAsync(const QVector<int>& list)
 {
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();

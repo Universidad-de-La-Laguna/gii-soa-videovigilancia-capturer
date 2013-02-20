@@ -32,6 +32,8 @@ ImageViewerWindow::ImageViewerWindow(QWidget *parent) :
 
 ImageViewerWindow::~ImageViewerWindow()
 {
+    workingThread_.quit();
+    workingThread_.wait();
     delete ui;
 }
 

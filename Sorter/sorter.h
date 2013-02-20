@@ -13,6 +13,7 @@ class Sorter : public QObject
 
     public:
         Sorter();
+        ~Sorter();
 
         // Ordenar asíncronamente un vector en el hilo de trabajo
         void sortAsync(const QVector<int>& list);
