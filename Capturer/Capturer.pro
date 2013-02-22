@@ -20,3 +20,8 @@ HEADERS  += imageviewerwindow.h \
     motiondetector.h
 
 FORMS    += imageviewerwindow.ui
+
+include (QtOpenCV.pri)
+
+OPENCV_VERSION = 2.4.4
+add_opencv_modules(core video imgproc)

@@ -5,7 +5,6 @@
 #include <QMovie>
 #include <QMainWindow>
 #include <QRect>
-#include <QThread>
 #include <QVector>
 
 #include "motiondetector.h"
@@ -39,7 +38,6 @@ private slots:
 private:
     Ui::ImageViewerWindow *ui;
     QMovie *movie_;
-    QThread workingThread_;
     MotionDetector motionDetector_;
 };
 

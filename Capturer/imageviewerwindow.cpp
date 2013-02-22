@@ -1,7 +1,10 @@
+#include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QMovie>
 #include <QMutex>
+#include <QPainter>
+#include <QPen>
 #include <QPixmap>
 #include <QRect>
 #include <QWaitCondition>
@@ -26,14 +29,11 @@ ImageViewerWindow::ImageViewerWindow(QWidget *parent) :
     connect(&motionDetector_, SIGNAL(done(QImage, QVector<QRect>)),
             this, SLOT(on_motionDetector_done(QImage, QVector<QRect>)));
 
-    motionDetector_.moveToThread(&workingThread_);
-    workingThread_.start();
+    motionDetector_.start();
 }
 
 ImageViewerWindow::~ImageViewerWindow()
 {
-    workingThread_.quit();
-    workingThread_.wait();
     delete ui;
 }
 
@@ -78,5 +78,9 @@ void ImageViewerWindow::on_movie_updated(const QRect&)
 void ImageViewerWindow::on_motionDetector_done(const QImage& image,
                                                const QVector<QRect>& boundingBoxes)
 {
-    ui->image->setPixmap(QPixmap::fromImage(image));
+    QImage newImage(image);
+    QPainter painter(&newImage);
+    painter.setPen(QPen(Qt::green, 3));
+    painter.drawRects(boundingBoxes.constData(), boundingBoxes.size());
+    ui->image->setPixmap(QPixmap::fromImage(newImage));
 }
