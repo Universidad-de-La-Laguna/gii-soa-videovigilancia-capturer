@@ -18,6 +18,19 @@ ImageViewerWindow::ImageViewerWindow(QWidget *parent) :
 //    ui->label->setMovie(movie_);
     connect(movie_, SIGNAL(updated(const QRect&)),
             this, SLOT(showFrame(const QRect&)));
+
+    // Conexiones para el control de reproducción
+    connect(ui->pbIniciar, SIGNAL(clicked()),
+            movie_, SLOT(start()));
+    connect(ui->pbParar, SIGNAL(clicked()),
+            movie_, SLOT(stop()));
+    connect(movie_, SIGNAL(stateChanged(QMovie::MovieState)),
+            this, SLOT(movieStateChanged(QMovie::MovieState)));
+
+    // Estado inicial de los botones de reproducción
+    ui->pbIniciar->setDisabled(false);
+    ui->pbParar->setDisabled(true);
+    ui->pbPausar->setDisabled(true);
 }
 
 ImageViewerWindow::~ImageViewerWindow()
@@ -26,7 +39,7 @@ ImageViewerWindow::~ImageViewerWindow()
     delete ui;
 }
 
-void ImageViewerWindow::on_pushButton_clicked()
+void ImageViewerWindow::on_pbSalir_clicked()
 {
     qApp->quit();
 }
@@ -52,7 +65,9 @@ void ImageViewerWindow::on_actionAbrir_triggered()
             }
             return;
         }
-        movie_->start();
+        if (ui->cbAutoInicio->isChecked()) {
+            movie_->start();
+        }
 //        QWaitCondition sleep;
 //        QMutex mutex;
 //        mutex.lock();               // Bloquear antes de que wait() lo libere
@@ -64,4 +79,33 @@ void ImageViewerWindow::on_actionAbrir_triggered()
 void ImageViewerWindow::showFrame(const QRect&)
 {
     ui->image->setPixmap(movie_->currentPixmap());
+}
+
+void ImageViewerWindow::on_pbPausar_clicked()
+{
+    if (movie_->state() == QMovie::Paused) {
+        movie_->setPaused(false);
+        ui->pbPausar->setText("Pausar");
+    }
+    else if (movie_->state() == QMovie::Running) {
+        movie_->setPaused(true);
+        ui->pbPausar->setText("Continuar");
+    }
+}
+
+void ImageViewerWindow::movieStateChanged(QMovie::MovieState state)
+{
+    switch (state) {
+    case QMovie::NotRunning:
+        ui->pbIniciar->setDisabled(false);
+        ui->pbParar->setDisabled(true);
+        ui->pbPausar->setDisabled(true);
+        break;
+    case QMovie::Paused:
+    case QMovie::Running:
+        ui->pbIniciar->setDisabled(true);
+        ui->pbParar->setDisabled(false);
+        ui->pbPausar->setDisabled(false);
+        break;
+    }
 }

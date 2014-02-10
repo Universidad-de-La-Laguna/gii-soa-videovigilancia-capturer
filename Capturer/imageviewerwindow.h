@@ -18,13 +18,17 @@ public:
     ~ImageViewerWindow();
     
 private slots:
-    void on_pushButton_clicked();
+    void on_pbSalir_clicked();
 
     void on_actionSalir_triggered();
 
     void on_actionAbrir_triggered();
 
     void showFrame(const QRect&);
+
+    void on_pbPausar_clicked();
+
+    void movieStateChanged(QMovie::MovieState state);
 
 private:
     Ui::ImageViewerWindow *ui;
