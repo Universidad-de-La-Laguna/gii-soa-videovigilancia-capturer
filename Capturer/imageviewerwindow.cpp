@@ -22,6 +22,7 @@ ImageViewerWindow::ImageViewerWindow(QWidget *parent) :
 
 ImageViewerWindow::~ImageViewerWindow()
 {
+    movie_->deleteLater();
     delete ui;
 }
 
