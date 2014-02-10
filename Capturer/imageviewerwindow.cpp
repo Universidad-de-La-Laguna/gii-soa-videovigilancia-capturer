@@ -17,7 +17,7 @@ ImageViewerWindow::ImageViewerWindow(QWidget *parent) :
     movie_ = new QMovie();
 //    ui->label->setMovie(movie_);
     connect(movie_, SIGNAL(updated(const QRect&)),
-            this, SLOT(on_movie_updated(const QRect&)));
+            this, SLOT(showFrame(const QRect&)));
 }
 
 ImageViewerWindow::~ImageViewerWindow()
@@ -58,7 +58,7 @@ void ImageViewerWindow::on_actionAbrir_triggered()
     }
 }
 
-void ImageViewerWindow::on_movie_updated(const QRect&)
+void ImageViewerWindow::showFrame(const QRect&)
 {
     ui->image->setPixmap(movie_->currentPixmap());
 }
