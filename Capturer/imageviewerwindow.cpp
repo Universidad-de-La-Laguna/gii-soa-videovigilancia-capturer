@@ -55,7 +55,9 @@ void ImageViewerWindow::on_actionAbrir_triggered()
         movie_->start();
 //        QWaitCondition sleep;
 //        QMutex mutex;
-//        sleep.wait(&mutex, 2000);   // Espera de 2 segundos
+//        mutex.lock();               // Bloquear antes de que wait() lo libere
+//        sleep.wait(&mutex, 5000);   // Espera de 5 segundos
+//        mutex.unlock();
     }
 }
 
