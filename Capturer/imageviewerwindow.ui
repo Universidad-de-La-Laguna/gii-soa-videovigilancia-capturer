@@ -118,7 +118,14 @@
     <addaction name="actionAbrir"/>
     <addaction name="actionSalir"/>
    </widget>
+   <widget class="QMenu" name="menuAy_uda">
+    <property name="title">
+     <string>Ay&amp;uda</string>
+    </property>
+    <addaction name="actionAcerca_de"/>
+   </widget>
    <addaction name="menu_Archivo"/>
+   <addaction name="menuAy_uda"/>
   </widget>
   <action name="actionAbrir">
    <property name="text">
@@ -128,6 +135,11 @@
   <action name="actionSalir">
    <property name="text">
     <string>&amp;Salir</string>
+   </property>
+  </action>
+  <action name="actionAcerca_de">
+   <property name="text">
+    <string>Acerca de...</string>
    </property>
   </action>
  </widget>
