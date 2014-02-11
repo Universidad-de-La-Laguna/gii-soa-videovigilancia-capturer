@@ -30,6 +30,8 @@ private slots:
 
     void movieStateChanged(QMovie::MovieState state);
 
+    void on_cbAutoInicio_stateChanged(int arg1);
+
 private:
     Ui::ImageViewerWindow *ui;
     QMovie *movie_;

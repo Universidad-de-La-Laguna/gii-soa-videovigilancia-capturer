@@ -3,6 +3,7 @@
 #include <QMovie>
 #include <QMutex>
 #include <QPixmap>
+#include <QSettings>
 #include <QWaitCondition>
 
 #include "imageviewerwindow.h"
@@ -28,6 +29,8 @@ ImageViewerWindow::ImageViewerWindow(QWidget *parent) :
             this, SLOT(movieStateChanged(QMovie::MovieState)));
 
     // Estado inicial de los botones de reproducción
+    QSettings settings;
+    ui->cbAutoInicio->setChecked(settings.value("viewer/autoinicio", false).toBool());
     ui->pbIniciar->setDisabled(false);
     ui->pbParar->setDisabled(true);
     ui->pbPausar->setDisabled(true);
@@ -108,4 +111,10 @@ void ImageViewerWindow::movieStateChanged(QMovie::MovieState state)
         ui->pbPausar->setDisabled(false);
         break;
     }
+}
+
+void ImageViewerWindow::on_cbAutoInicio_stateChanged(int arg1)
+{
+    QSettings settings;
+    settings.setValue("viewer/autoinicio", arg1==Qt::Checked);
 }
