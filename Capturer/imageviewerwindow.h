@@ -32,6 +32,8 @@ private slots:
 
     void on_cbAutoInicio_stateChanged(int arg1);
 
+    void on_actionAcerca_de_triggered();
+
 private:
     Ui::ImageViewerWindow *ui;
     QMovie *movie_;

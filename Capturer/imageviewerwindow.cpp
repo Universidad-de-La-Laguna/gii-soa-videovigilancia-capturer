@@ -8,6 +8,7 @@
 
 #include "imageviewerwindow.h"
 #include "ui_imageviewerwindow.h"
+#include "acercadedialog.h"
 
 ImageViewerWindow::ImageViewerWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -15,7 +16,7 @@ ImageViewerWindow::ImageViewerWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    movie_ = new QMovie();
+    movie_ = new QMovie(this);
 //    ui->label->setMovie(movie_);
     connect(movie_, SIGNAL(updated(const QRect&)),
             this, SLOT(showFrame(const QRect&)));
@@ -117,4 +118,10 @@ void ImageViewerWindow::on_cbAutoInicio_stateChanged(int arg1)
 {
     QSettings settings;
     settings.setValue("viewer/autoinicio", arg1==Qt::Checked);
+}
+
+void ImageViewerWindow::on_actionAcerca_de_triggered()
+{
+    AcercaDeDialog dialog(this);
+    dialog.exec();
 }

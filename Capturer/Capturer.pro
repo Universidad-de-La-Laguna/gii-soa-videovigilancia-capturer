@@ -13,8 +13,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        imageviewerwindow.cpp
+        imageviewerwindow.cpp \
+    acercadedialog.cpp
 
-HEADERS  += imageviewerwindow.h
+HEADERS  += imageviewerwindow.h \
+    acercadedialog.h
 
-FORMS    += imageviewerwindow.ui
+FORMS    += imageviewerwindow.ui \
+    acercadedialog.ui
