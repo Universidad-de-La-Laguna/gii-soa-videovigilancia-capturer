@@ -116,6 +116,7 @@
      <string>&amp;Archivo</string>
     </property>
     <addaction name="actionAbrir"/>
+    <addaction name="actionCapturar"/>
     <addaction name="actionSalir"/>
    </widget>
    <widget class="QMenu" name="menuAy_uda">
@@ -140,6 +141,11 @@
   <action name="actionAcerca_de">
    <property name="text">
     <string>Acerca de...</string>
+   </property>
+  </action>
+  <action name="actionCapturar">
+   <property name="text">
+    <string>Capturar</string>
    </property>
   </action>
  </widget>

@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += multimedia multimediawidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -14,10 +15,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         imageviewerwindow.cpp \
-    acercadedialog.cpp
+    acercadedialog.cpp \
+    capturebuffer.cpp
 
 HEADERS  += imageviewerwindow.h \
-    acercadedialog.h
+    acercadedialog.h \
+    capturebuffer.h
 
 FORMS    += imageviewerwindow.ui \
     acercadedialog.ui

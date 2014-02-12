@@ -16,9 +16,17 @@ ImageViewerWindow::ImageViewerWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // Reproducción de archivos MPJEG
     movie_ = new QMovie(this);
 //    ui->label->setMovie(movie_);
     connect(movie_, SIGNAL(updated(const QRect&)),
+            this, SLOT(showFrame(const QRect&)));
+
+    // Reproducción de imágenes de la webcam
+    camera_ = new QCamera(this);
+    captureBuffer_ = new CaptureBuffer(this);
+    camera_->setViewfinder(captureBuffer_);
+    connect(captureBuffer_, SIGNAL(updated(const QRect&)),
             this, SLOT(showFrame(const QRect&)));
 
     // Conexiones para el control de reproducción
@@ -32,7 +40,7 @@ ImageViewerWindow::ImageViewerWindow(QWidget *parent) :
     // Estado inicial de los botones de reproducción
     QSettings settings;
     ui->cbAutoInicio->setChecked(settings.value("viewer/autoinicio", false).toBool());
-    ui->pbIniciar->setDisabled(false);
+    ui->pbIniciar->setDisabled(true);
     ui->pbParar->setDisabled(true);
     ui->pbPausar->setDisabled(true);
 }
@@ -58,31 +66,44 @@ void ImageViewerWindow::on_actionAbrir_triggered()
     QString fileName = QFileDialog::getOpenFileName(this, tr("Abrir el archivo"),
             QString(), tr("Vídeo MJPEG (*.mjpg *.mjpeg)"));
 
-    if (!fileName.isEmpty()) {
-        movie_->setFileName(fileName);
-        if (!movie_->isValid()) {
-            if (!movie_->device()->isOpen()) {
-                QMessageBox::critical(this, tr("Error"), tr("No se puede abrir el archivo"));
-            }
-            else {
-                QMessageBox::critical(this, tr("Error"), tr("El formato no es válido"));
-            }
-            return;
+    if (fileName.isEmpty()) {
+        return;
+    }
+
+    movie_->setFileName(fileName);
+    if (!movie_->isValid()) {
+        if (!movie_->device()->isOpen()) {
+            QMessageBox::critical(this, tr("Error"), tr("No se puede abrir el archivo"));
         }
-        if (ui->cbAutoInicio->isChecked()) {
-            movie_->start();
+        else {
+            QMessageBox::critical(this, tr("Error"), tr("El formato no es válido"));
         }
+        return;
+    }
+
+    camera_->stop();
+    if (ui->cbAutoInicio->isChecked()) {
+        movie_->start();
+    }
+    else {
+        ui->pbIniciar->setDisabled(false);
+    }
+
 //        QWaitCondition sleep;
 //        QMutex mutex;
 //        mutex.lock();               // Bloquear antes de que wait() lo libere
 //        sleep.wait(&mutex, 5000);   // Espera de 5 segundos
 //        mutex.unlock();
-    }
 }
 
 void ImageViewerWindow::showFrame(const QRect&)
 {
-    ui->image->setPixmap(movie_->currentPixmap());
+    if (movie_->state() == QMovie::Running) {
+        ui->image->setPixmap(movie_->currentPixmap());
+    }
+    else if (camera_->state() == QCamera::ActiveState) {
+        ui->image->setPixmap(captureBuffer_->currentPixmap());
+    }
 }
 
 void ImageViewerWindow::on_pbPausar_clicked()
@@ -124,4 +145,11 @@ void ImageViewerWindow::on_actionAcerca_de_triggered()
 {
     AcercaDeDialog dialog(this);
     dialog.exec();
+}
+
+void ImageViewerWindow::on_actionCapturar_triggered()
+{
+    movie_->stop();
+    ui->pbIniciar->setDisabled(true);
+    camera_->start();
 }

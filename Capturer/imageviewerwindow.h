@@ -4,6 +4,8 @@
 #include <QMovie>
 #include <QMainWindow>
 #include <QRect>
+#include <QCamera>
+#include "capturebuffer.h"
 
 namespace Ui {
 class ImageViewerWindow;
@@ -34,9 +36,13 @@ private slots:
 
     void on_actionAcerca_de_triggered();
 
+    void on_actionCapturar_triggered();
+
 private:
     Ui::ImageViewerWindow *ui;
     QMovie *movie_;
+    QCamera *camera_;
+    CaptureBuffer *captureBuffer_;
 };
 
 #endif // IMAGEVIEWERWINDOW_H
