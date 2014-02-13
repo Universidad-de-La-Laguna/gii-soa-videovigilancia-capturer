@@ -5,6 +5,8 @@
 #include <QPixmap>
 #include <QSettings>
 #include <QWaitCondition>
+#include <QPainter>
+#include <QDateTime>
 
 #include "imageviewerwindow.h"
 #include "ui_imageviewerwindow.h"
@@ -110,7 +112,14 @@ void ImageViewerWindow::showFrame(const QRect&)
         ui->image->setPixmap(movie_->currentPixmap());
     }
     else if (camera_->state() == QCamera::ActiveState) {
-        ui->image->setPixmap(captureBuffer_->currentPixmap());
+        QPixmap frame = captureBuffer_->currentPixmap();
+        QPainter painter(&frame);
+        painter.setPen(QPen(Qt::green, 3));
+        painter.setFont(QFont("Helvetica", 18));
+        QString timestamp = QDateTime::currentDateTime().toString("hh:mm:ss.zzz");
+        painter.drawText(0, 0, frame.size().width(), frame.size().height(),
+                         Qt::AlignRight | Qt::AlignBottom, timestamp);
+        ui->image->setPixmap(frame);
     }
 }
 
