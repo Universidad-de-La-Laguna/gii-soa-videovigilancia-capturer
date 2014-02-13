@@ -38,6 +38,8 @@ private slots:
 
     void on_actionCapturar_triggered();
 
+    void on_actionPreferencias_triggered();
+
 private:
     Ui::ImageViewerWindow *ui;
     QMovie *movie_;

@@ -16,11 +16,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         imageviewerwindow.cpp \
     acercadedialog.cpp \
-    capturebuffer.cpp
+    capturebuffer.cpp \
+    preferencesdialog.cpp
 
 HEADERS  += imageviewerwindow.h \
     acercadedialog.h \
-    capturebuffer.h
+    capturebuffer.h \
+    preferencesdialog.h
 
 FORMS    += imageviewerwindow.ui \
-    acercadedialog.ui
+    acercadedialog.ui \
+    preferencesdialog.ui

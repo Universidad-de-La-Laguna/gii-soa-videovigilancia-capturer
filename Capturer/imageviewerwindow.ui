@@ -125,7 +125,14 @@
     </property>
     <addaction name="actionAcerca_de"/>
    </widget>
+   <widget class="QMenu" name="menu_Editar">
+    <property name="title">
+     <string>&amp;Editar</string>
+    </property>
+    <addaction name="actionPreferencias"/>
+   </widget>
    <addaction name="menu_Archivo"/>
+   <addaction name="menu_Editar"/>
    <addaction name="menuAy_uda"/>
   </widget>
   <action name="actionAbrir">
@@ -146,6 +153,11 @@
   <action name="actionCapturar">
    <property name="text">
     <string>Capturar</string>
+   </property>
+  </action>
+  <action name="actionPreferencias">
+   <property name="text">
+    <string>Prefere&amp;ncias</string>
    </property>
   </action>
  </widget>

@@ -9,12 +9,15 @@
 #include "imageviewerwindow.h"
 #include "ui_imageviewerwindow.h"
 #include "acercadedialog.h"
+#include "preferencesdialog.h"
 
 ImageViewerWindow::ImageViewerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ImageViewerWindow)
 {
     ui->setupUi(this);
+
+    QSettings settings;
 
     // Reproducción de archivos MPJEG
     movie_ = new QMovie(this);
@@ -23,7 +26,13 @@ ImageViewerWindow::ImageViewerWindow(QWidget *parent) :
             this, SLOT(showFrame(const QRect&)));
 
     // Reproducción de imágenes de la webcam
-    camera_ = new QCamera(this);
+    QString device = settings.value("capturer/dispositivo").toString();
+    if (device.isEmpty()) {
+        camera_ = new QCamera(this);
+    }
+    else {
+        camera_ = new QCamera(device.toLocal8Bit(), this);
+    }
     captureBuffer_ = new CaptureBuffer(this);
     camera_->setViewfinder(captureBuffer_);
     connect(captureBuffer_, SIGNAL(updated(const QRect&)),
@@ -38,7 +47,6 @@ ImageViewerWindow::ImageViewerWindow(QWidget *parent) :
             this, SLOT(movieStateChanged(QMovie::MovieState)));
 
     // Estado inicial de los botones de reproducción
-    QSettings settings;
     ui->cbAutoInicio->setChecked(settings.value("viewer/autoinicio", false).toBool());
     ui->pbIniciar->setDisabled(true);
     ui->pbParar->setDisabled(true);
@@ -152,4 +160,27 @@ void ImageViewerWindow::on_actionCapturar_triggered()
     movie_->stop();
     ui->pbIniciar->setDisabled(true);
     camera_->start();
+}
+
+void ImageViewerWindow::on_actionPreferencias_triggered()
+{
+    PreferencesDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+        QSettings settings;
+        QString currentDevice = settings.value("capturer/dispositivo").toString();
+        QString selectedDevice = dialog.selectedDevice();
+        if (selectedDevice != currentDevice) {
+            settings.setValue("capturer/dispositivo", selectedDevice);
+            camera_->stop();
+            camera_->deleteLater();
+            if (selectedDevice.isEmpty()) {
+                camera_ = new QCamera(this);
+                camera_->setViewfinder(captureBuffer_);
+            }
+            else {
+                camera_ = new QCamera(selectedDevice.toLocal8Bit(), this);
+                camera_->setViewfinder(captureBuffer_);
+            }
+        }
+   }
 }
